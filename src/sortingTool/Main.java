@@ -8,18 +8,29 @@ public class Main {
 	static ArrayList<String> arr = new ArrayList<String>();
 	
 	public static void main(String[] args) {
-		if(args[0].equals("-dataType"))
-		switch (args[1]) {
-		case "word":
-			wordData();
-			break;
-		case "line":
-			lineData();
-			break;
-		case "long":
-			longData();
-			break;
-		}		
+		if(args.length>2) { 
+			for (int j = 0; j < args.length; j++) { 
+				if(args[j].equals("-sortIntegers")) { 
+					sortIntegers();
+					break;
+				}
+			}	
+		}
+		else if(args[0].equals("-sortIntegers"))
+			sortIntegers();
+		else if(args[0].equals("-dataType")) {
+			switch (args[1]) {
+			case "word":
+				wordData();
+				break;
+			case "line":
+				lineData();
+				break;
+			case "long":
+				longData();
+				break;
+			}
+		}
 	}
 	
 	static void wordData() {
@@ -79,5 +90,32 @@ public class Main {
 		}
 		System.out.printf("Total numbers: %d.\n", arr.size());
 		System.out.println("The largest number: " + arr.get(max) + " (" + occ + " time(s), " + ((occ*100)/arr.size()) + "%).");
+	}
+
+	static void sortIntegers() {
+		while(sc.hasNext()) {
+			arr.add(sc.next().trim());
+        }
+		System.out.printf("Total numbers: %d.\n", arr.size());
+		System.out.print("Sorted data: ");
+		sortArr();
+	}
+	static void sortArr() {
+		int[] arrSort = new int[arr.size()];
+		for (int i = 0; i < arrSort.length; i++) {
+			arrSort[i] = Integer.valueOf(arr.get(i));
+		}
+		for (int i = 0; i < arrSort.length - 1; i++) {
+			for (int j = i + 1; j < arrSort.length; j++) {
+				if(arrSort[i] > arrSort[j]) {
+					int c = arrSort[i];
+					arrSort[i] = arrSort[j];
+					arrSort[j] = c;
+				}
+			}
+		}
+		for (int i = 0; i < arrSort.length-1; i++) 
+			System.out.print(arrSort[i] + " ");
+		System.out.println(arrSort[arrSort.length-1]);
 	}
 }
