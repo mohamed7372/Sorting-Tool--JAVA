@@ -11,40 +11,50 @@ public class Main {
 	static HashMap<String, String> values = new HashMap<String, String>(); 
 	
 	public static void main(String[] args) {
-		int i = -1, j = -1;
-		if(args.length > 3){
-			if(args[0].equals("-dataType"))
-				i = 0;
-			else if(args[2].equals("-dataType"))
-				i = 2;
-			if(args[0].equals("-sortingType"))
-				j = 0;
-			else if(args[2].equals("-sortingType"))
-				j = 2;
-		}
-		else
-			i = 0;
-		if(i != -1) {
-			switch (args[i+1]) {
-			case "word":
-				if(j != -1)
-					wordData(args[j+1]);
-				else 
-					wordData("natural");
-				break;
-			case "line":
-				if(j != -1)
-					lineData(args[j+1]);
-				else 
-					lineData("natural");
-				break;
-			case "long":
-				if(j != -1)
-					longData(args[j+1]);
-				else 
-					longData("natural");
-				break;
+		String[] input = {"", "", "", ""};
+		for (int i = 0; i < args.length; i++) {
+			if(args[i].equals("-sortingType")) {
+				input[0] = "sorting";
+				if(++i < args.length)
+					input[1] = args[i];
 			}
+			else if(args[i].equals("-dataType")) {
+				input[2] = "data";
+				if(++i < args.length)
+					input[3] = args[i];
+			}
+			else if(args[i].charAt(0) == '-') 
+				System.out.println("\"" + args[i] + "\" isn't a valid parameter. It's skipped.");
+		}
+		
+		if(!input[0].isEmpty() && input[1].isEmpty())
+			System.out.println("No sorting type defined!");
+		else if(!input[2].isEmpty() && input[3].isEmpty())
+			System.out.println("No data type defined!");
+		else if(!input[2].isEmpty() && !input[3].isEmpty())
+			traitement(input);
+	}
+	
+	static void traitement(String[] args) {
+		switch (args[3]) {
+		case "word":
+			if(!args[1].isEmpty())
+				wordData(args[1]);
+			else 
+				wordData("natural");
+			break;
+		case "line":
+			if(!args[1].isEmpty())
+				lineData(args[1]);
+			else 
+				lineData("natural");
+			break;
+		case "long":
+			if(!args[1].isEmpty())
+				longData(args[1]);
+			else 
+				longData("natural");
+			break;
 		}
 	}
 	
@@ -72,9 +82,10 @@ public class Main {
 		while(sc.hasNext()) {
 			arr.add(sc.next().trim());
         }
-		System.out.printf("Total numbers: %d.\n", arr.size());
-		if(sortingType.equals("byCount"))
+		if(sortingType.equals("byCount")) {
+			System.out.printf("Total numbers: %d.\n", arr.size());
 			byCount("long");
+		}
 		else if(sortingType.equals("natural"))
 			natural("long");
 	}
@@ -138,22 +149,29 @@ public class Main {
 		}
 	}
 	static void natural(String typeData) {
-		System.out.print("Sorted data: ");
 		if(typeData.equals("long")) {
 			ArrayList<Integer> ar = new ArrayList<Integer>();
-			for (int i = 0; i < arr.size(); i++) 
-				ar.add(Integer.valueOf(arr.get(i)));
+			for (int i = 0; i < arr.size(); i++) { 
+				if(arr.get(i).matches("[-]{0,1}\\d+"))
+					ar.add(Integer.valueOf(arr.get(i)));
+				else
+					System.out.println("\"" + arr.get(i) + "\" isn't a long. It's skipped.");
+			}
+			System.out.printf("Total numbers: %d.\n", ar.size());
+			System.out.print("Sorted data: ");
 			Collections.sort(ar);
 			for (Integer integer : ar) 
 				System.out.print(integer + " ");
 		}
 		else if(typeData.equals("line")){
+			System.out.print("Sorted data: ");
 			System.out.println();
 			Collections.sort(arr);
 			for (String str : arr) 
 				System.out.println(str);
 		}
 		else {
+			System.out.print("Sorted data: ");
 			Collections.sort(arr);
 			for (String str : arr) 
 				System.out.print(str + " ");
